@@ -27,7 +27,7 @@
     </head>
     <body>
         <h1>資工選課表</h1>
-        <table>
+        <table id="csie">
             <tr>
                 <th>開課單位</th><th>課程名稱</th><th>授課教師</th>
             </tr>
@@ -50,5 +50,12 @@
                 <td>資工系</td><td>硬體專題</td><td>魏志達</td>
             </tr>
         </table>
+        <button onclick="changeResult()">Change</button>
+        <script>
+            function changeResult(){
+                var myTable=document.getElementById("csie");
+                myTable.rows[1].cells[2].innerHTML="李春良"
+            }
+        </script>
     </body>
 </html>
