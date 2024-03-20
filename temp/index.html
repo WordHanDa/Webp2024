@@ -1,0 +1,22 @@
+<html>
+    <body>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <button onclick="addfunction()"class="btn btn-outline-primary">Add it</button>
+        <button onclick="delfunction()"class="btn btn-outline-primary">Del it</button>
+    </body>
+    <script>
+        var count=1;
+        function addfunction(){
+            var btn = document.createElement("BUTTON");
+            btn.innerHTML = `Click Me(${count})`;
+            btn.setAttribute("id","btn_" + count++);
+            btn.setAttribute("class","btn btn-outline-danger");
+            document.body.appendChild(btn);
+        };
+        function delfunction(){
+            var btn = document.getElementById("btn_"+ --count);
+            console.log(btn);
+            document.body.removeChild(btn);
+        }
+    </script>
+</html>
