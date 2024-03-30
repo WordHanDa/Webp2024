@@ -40,6 +40,7 @@
         <thead>
             <tr>
                 <th>名稱</th>
+                <th>時間</th>
                 <th>地點</th>
                 <th>票價</th>
             </tr>
@@ -73,11 +74,14 @@
                 var row = tableBody.insertRow();
                 row.insertCell(0).innerHTML = data['title'];
                 if (data['showInfo'] && data['showInfo'].length > 0) {
-                    row.insertCell(1).innerHTML = data['showInfo'][0]['location'];
-                    row.insertCell(2).innerHTML = data['showInfo'][0]['price'];
+                    row.insertCell(1).innerHTML = data['showInfo'][0]['time'];
+                    row.insertCell(2).innerHTML = data['showInfo'][0]['location'];
+                    row.insertCell(3).innerHTML = data['showInfo'][0]['price'];
+                    
                 } else {
                     row.insertCell(1).innerHTML = "N/A";
                     row.insertCell(2).innerHTML = "N/A";
+                    row.insertCell(3).innerHTML = "N/A";
                 }
             });
             renderNavigationBar();
