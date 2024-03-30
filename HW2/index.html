@@ -1,60 +1,128 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<head>
     <meta charset="UTF-8">
+    <title>2024Web</title>
     <style>
         h1, table {
-        font-family: Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
         }
         td, th {
-        border: 1px solid #ddd;
-        padding: 6px;
+            border: 1px solid #ddd;
+            padding: 6px;
         }
         tr:nth-child(even){background-color: #f2f2f2;}
         tr:hover {background-color: #ddd;}
         th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #04AA6D;
-        color: white;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+        .navigation-bar {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .navigation-bar button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            cursor: pointer;
         }
     </style>
-    <head>
-        <title>2024Web</title>
-    </head>
-    <body>
-        <h1>景點觀光展覽資訊</h1>
-        <table id="csie" class="table teble-striped table-hover">
+</head>
+<body>
+    <h1>景點觀光展覽資訊</h1>
+    <input type="text" id="searchInput" placeholder="輸入名稱進行搜尋..." onchange="search()">
+    <table id="csie" class="table teble-striped table-hover">
+        <thead>
             <tr>
                 <th>名稱</th>
                 <th>地點</th>
                 <th>票價</th>
             </tr>
-        </table>
-        <button onclick="delOldData">OldData</button>
-        <script>
-            var openUrl = "https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6";
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', openUrl, true);
-            xhr.send();
-            xhr.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var dataset = JSON.parse(this.responseText);
-                    addNewData(dataset);
-                }
-            };
-            function addNewData(dataset) {
-                var myTable = document.getElementById("csie");
-                dataset.forEach(function(data, index) {
-                    var row = myTable.insertRow(-1);
-                    row.insertCell(0).innerHTML = data['title'];
-                    data['showInfo'] && data['showInfo'].length > 0
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+    <div id="navigationBar" class="navigation-bar"></div>
+    <script>
+        var dataset = []; // Global variable to store the dataset
+        var currentPage = 1; // Variable to track current page
+        var itemsPerPage = 10; // Number of items per page
+
+        var openUrl = "https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6";
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', openUrl, true);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                dataset = JSON.parse(this.responseText);
+                updateTable();
+            }
+        };
+
+        function updateTable() {
+            var startIndex = (currentPage - 1) * itemsPerPage;
+            var endIndex = startIndex + itemsPerPage;
+            var slicedData = dataset.slice(startIndex, endIndex);
+            var tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = ''; // Clear previous data
+            slicedData.forEach(function(data) {
+                var row = tableBody.insertRow();
+                row.insertCell(0).innerHTML = data['title'];
+                if (data['showInfo'] && data['showInfo'].length > 0) {
                     row.insertCell(1).innerHTML = data['showInfo'][0]['location'];
                     row.insertCell(2).innerHTML = data['showInfo'][0]['price'];
-                });
+                } else {
+                    row.insertCell(1).innerHTML = "N/A";
+                    row.insertCell(2).innerHTML = "N/A";
+                }
+            });
+            renderNavigationBar();
+        }
+
+        function renderNavigationBar() {
+            var totalPages = Math.ceil(dataset.length / itemsPerPage);
+            var navigationBar = document.getElementById("navigationBar");
+            navigationBar.innerHTML = '';
+            var prevButton = document.createElement("button");
+            prevButton.textContent = "上一頁";
+            prevButton.onclick = function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateTable();
+                }
+            };
+            navigationBar.appendChild(prevButton);
+            var pageStatus = document.createTextNode(currentPage + "/" + totalPages + "頁");
+            navigationBar.appendChild(pageStatus);
+            var nextButton = document.createElement("button");
+            nextButton.textContent = "下一頁";
+            nextButton.onclick = function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateTable();
+                }
+            };
+            navigationBar.appendChild(nextButton);
+        }
+
+        function search() {
+            var searchInput = document.getElementById("searchInput").value.toLowerCase();
+            if (searchInput === "") {
+                updateTable();
+                return;
             }
-        </script>
-    </body>
+            var filteredData = dataset.filter(function(data) {
+                return data['title'].toLowerCase().includes(searchInput);
+            });
+            currentPage = 1; // Reset to first page after search
+            dataset = filteredData; // Update dataset with filtered data
+            updateTable();
+        }
+    </script>
+</body>
 </html>
