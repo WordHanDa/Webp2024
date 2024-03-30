@@ -74,7 +74,7 @@
                 var row = tableBody.insertRow();
                 row.insertCell(0).innerHTML = data['title'];
                 if (data['showInfo'] && data['showInfo'].length > 0) {
-                    row.insertCell(1).innerHTML = data['showInfo'][0]['time'];
+                    row.insertCell(1).innerHTML = data['showInfo'][0]['time'] + "~" + data['showInfo'][0]['endTime'];
                     row.insertCell(2).innerHTML = data['showInfo'][0]['location'];
                     row.insertCell(3).innerHTML = data['showInfo'][0]['price'];
                     
