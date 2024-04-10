@@ -12,7 +12,7 @@ function getimg() {
     };
 }
 
-function add_new_img(dataset) {
+function add_new_img(dataset){
     var gal = document.getElementById("gallery");
     dataset.forEach(function(item) {
         var img = document.createElement("img");
