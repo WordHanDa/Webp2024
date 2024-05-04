@@ -6,10 +6,11 @@ const Datagrid = () => {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
   const columns = [
-    { field: 'title', headerName: 'Title', width: 300 },
-    { field: 'time', headerName: 'Time', width: 200 },
-    { field: 'location', headerName: 'Location', width: 200 },
-    { field: 'price', headerName: 'Price', width: 200 },
+    { field: 'title', headerName: 'Title', width: 200 },
+    { field: 'startDate', headerName: 'Start Date', width: 200 },
+    { field: 'endDate', headerName: 'End Date', width: 200 },
+    { field: 'showUnit', headerName: 'Location', width: 200 },
+    { field: 'discountInfo', headerName: 'Price', width: 200 },
   ];
 
   useEffect(() => {
@@ -21,7 +22,12 @@ const Datagrid = () => {
         }
         const data = await response.json();
         console.log("Data received:", data); // Log received data
-        setRows(data.map((row, index) => ({ ...row, id: index + 1 }))); // Ensure each row has a unique ID
+        
+        // Ensure each row has a unique ID
+        const rowsWithIds = data.map((row, index) => ({ ...row, id: index + 1 }));
+        console.log("Rows with IDs:", rowsWithIds); // Log rows with IDs
+
+        setRows(rowsWithIds);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error);
@@ -37,8 +43,8 @@ const Datagrid = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div style={{ height: 400, width: '50%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5}/>
+    <div style={{ height: 400, width: '50%', margin: 'auto' }}>
+      <DataGrid rows={rows} columns={columns} pageSize={5} />
     </div>
   );
 }
