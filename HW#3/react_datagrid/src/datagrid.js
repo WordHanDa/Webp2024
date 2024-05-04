@@ -5,6 +5,7 @@ const Datagrid = () => {
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
+  const [filteredRows, setFilteredRows] = useState([]); // State for filtered rows
   const columns = [
     { field: 'title', headerName: 'Title', width: 200 },
     { field: 'startDate', headerName: 'Start Date', width: 200 },
@@ -28,6 +29,7 @@ const Datagrid = () => {
         console.log("Rows with IDs:", rowsWithIds); // Log rows with IDs
 
         setRows(rowsWithIds);
+        setFilteredRows(rowsWithIds); // Initialize filtered rows with all rows
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error);
@@ -39,12 +41,21 @@ const Datagrid = () => {
     fetchData();
   }, []); // Run only once on component mount
 
+  function handleSearch(event) {
+    const searchInput = event.target.value.toLowerCase();
+    const filteredData = rows.filter(data => 
+      data.title.toLowerCase().includes(searchInput)
+    );
+    setFilteredRows(filteredData);
+  }
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div style={{ height: 400, width: '50%', margin: 'auto' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} />
+      <input type="text" placeholder="Search by title..." onChange={handleSearch}/>
+      <DataGrid rows={filteredRows} columns={columns} pageSize={5} />
     </div>
   );
 }
