@@ -54,8 +54,8 @@ const Datagrid = () => {
 
   return (
     <div style={{ height: 400, width: '50%', margin: 'auto' }}>
-      <input type="text" placeholder="Search by title..." onChange={handleSearch}/>
-      <DataGrid rows={filteredRows} columns={columns} pageSize={5} />
+      <input type="text" placeholder="輸入名稱進行搜尋..." onChange={handleSearch}/>
+      <DataGrid rows={filteredRows} columns={columns} pageSize={5}/>
     </div>
   );
 }
